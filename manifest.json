@@ -1,6 +1,6 @@
 {
     "name": "My Disney Cruise Navigator",
-    "short_name": "Cruise Navi",
+    "short_name": "My Disney Cruise Navigator",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0D3D4F",
