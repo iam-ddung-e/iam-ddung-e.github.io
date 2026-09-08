@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="My Disney Cruise Navigator">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="My Disney Cruise Navigator">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>My Disney Cruise Navigator</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overscroll-behavior: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    img, svg, canvas {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      pointer-events: auto;
+    }
+    #desktop-block {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: #0D3D4F;
+      color: #D4A017;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+      z-index: 999999;
+      text-align: center;
+      padding: 20px;
+    }
+    #desktop-block.show { display: flex; }
+    #desktop-block.show ~ * { visibility: hidden; }
+  </style>
+</head>
+<body>
+  <div id="desktop-block">모바일 기기에서만 접속 가능합니다.</div>
+
+  <script>
+    (function() {
+      var ua = navigator.userAgent || '';
+      var isMobileUA = /Android|iPhone|iPod|IEMobile|BlackBerry|Opera Mini/i.test(ua);
+      var isIPad = /iPad/i.test(ua) || (ua.indexOf('Mac') !== -1 && 'ontouchend' in document);
+      var hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var smallViewport = Math.min(screen.width, screen.height) <= 500;
+      var mobile = isMobileUA || (hasTouch && smallViewport);
+      if (isIPad && !smallViewport) mobile = false;
+      if (!mobile) {
+        document.getElementById('desktop-block').classList.add('show');
+        var s = document.createElement('style');
+        s.textContent = 'flutter-view, flt-glass-pane, flt-scene-host, #flutter_bootstrap_placeholder { display: none !important; }';
+        document.head.appendChild(s);
+        return;
+      }
+
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; }, { capture: true });
+      document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; }, { capture: true });
+      document.addEventListener('copy', function(e) { e.preventDefault(); return false; }, { capture: true });
+      document.addEventListener('cut', function(e) { e.preventDefault(); return false; }, { capture: true });
+      document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; }, { capture: true });
+      document.addEventListener('keydown', function(e) {
+        var k = (e.key || '').toLowerCase();
+        var ctrl = e.ctrlKey || e.metaKey;
+        if (e.key === 'F12') { e.preventDefault(); return false; }
+        if (ctrl && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+        if (ctrl && (k === 'u' || k === 's' || k === 'p' || k === 'a')) { e.preventDefault(); return false; }
+      }, { capture: true });
+
+      var loadScript = document.createElement('script');
+      loadScript.src = 'flutter_bootstrap.js';
+      loadScript.async = true;
+      document.body.appendChild(loadScript);
+    })();
+  </script>
+</body>
+</html>

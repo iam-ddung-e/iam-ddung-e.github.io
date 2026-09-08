@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="bg_frozen" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a8d8f0"/>
+      <stop offset="100%" stop-color="#1a6fa8"/>
+    </radialGradient>
+    <linearGradient id="flake" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#c8eaff"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#bg_frozen)" stroke="#5bb8e8" stroke-width="2"/>
+  <!-- Snowflake center -->
+  <circle cx="50" cy="50" r="5" fill="url(#flake)" opacity="0.95"/>
+  <!-- Main arms -->
+  <line x1="50" y1="14" x2="50" y2="86" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="14" y1="50" x2="86" y2="50" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="22" y1="22" x2="78" y2="78" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="78" y1="22" x2="22" y2="78" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Branch tips top -->
+  <line x1="50" y1="14" x2="42" y2="22" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="50" y1="14" x2="58" y2="22" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Branch tips bottom -->
+  <line x1="50" y1="86" x2="42" y2="78" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="50" y1="86" x2="58" y2="78" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Branch tips left -->
+  <line x1="14" y1="50" x2="22" y2="42" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="50" x2="22" y2="58" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Branch tips right -->
+  <line x1="86" y1="50" x2="78" y2="42" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="86" y1="50" x2="78" y2="58" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Mid branches diagonal -->
+  <line x1="22" y1="22" x2="28" y2="32" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="22" x2="32" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="78" y1="22" x2="72" y2="32" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="78" y1="22" x2="68" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="78" x2="28" y2="68" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="78" x2="32" y2="72" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="78" y1="78" x2="72" y2="68" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="78" y1="78" x2="68" y2="72" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Center diamond -->
+  <polygon points="50,43 57,50 50,57 43,50" fill="white" opacity="0.9"/>
+</svg>

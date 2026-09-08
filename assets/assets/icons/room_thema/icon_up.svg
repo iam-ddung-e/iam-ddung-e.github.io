@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="bg_up" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#87ceeb"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#bg_up)" stroke="#1976d2" stroke-width="2"/>
+  <!-- Clouds -->
+  <ellipse cx="20" cy="35" rx="12" ry="7" fill="white" opacity="0.8"/>
+  <ellipse cx="30" cy="30" rx="10" ry="6" fill="white" opacity="0.8"/>
+  <ellipse cx="78" cy="40" rx="10" ry="6" fill="white" opacity="0.7"/>
+  <ellipse cx="85" cy="35" rx="8" ry="5" fill="white" opacity="0.7"/>
+  <!-- Balloon strings -->
+  <line x1="38" y1="55" x2="32" y2="38" stroke="#888" stroke-width="0.8" opacity="0.8"/>
+  <line x1="42" y1="55" x2="40" y2="36" stroke="#888" stroke-width="0.8" opacity="0.8"/>
+  <line x1="50" y1="54" x2="50" y2="34" stroke="#888" stroke-width="0.8" opacity="0.8"/>
+  <line x1="58" y1="55" x2="60" y2="36" stroke="#888" stroke-width="0.8" opacity="0.8"/>
+  <line x1="62" y1="55" x2="68" y2="38" stroke="#888" stroke-width="0.8" opacity="0.8"/>
+  <!-- Balloons -->
+  <ellipse cx="32" cy="32" rx="5" ry="6" fill="#e53935"/>
+  <ellipse cx="40" cy="29" rx="5" ry="6" fill="#fdd835"/>
+  <ellipse cx="50" cy="27" rx="5" ry="6" fill="#43a047"/>
+  <ellipse cx="60" cy="29" rx="5" ry="6" fill="#1e88e5"/>
+  <ellipse cx="68" cy="32" rx="5" ry="6" fill="#8e24aa"/>
+  <!-- More balloons back row -->
+  <ellipse cx="36" cy="25" rx="4" ry="5" fill="#fb8c00" opacity="0.85"/>
+  <ellipse cx="45" cy="22" rx="4" ry="5" fill="#e91e63" opacity="0.85"/>
+  <ellipse cx="55" cy="22" rx="4" ry="5" fill="#00acc1" opacity="0.85"/>
+  <ellipse cx="64" cy="25" rx="4" ry="5" fill="#7cb342" opacity="0.85"/>
+  <!-- House -->
+  <rect x="32" y="62" width="36" height="28" rx="2" fill="#f5a623"/>
+  <polygon points="28,62 50,46 72,62" fill="#c0392b"/>
+  <!-- Door -->
+  <rect x="44" y="72" width="12" height="18" rx="2" fill="#8b4513"/>
+  <circle cx="53" cy="81" r="1.5" fill="#f5a623"/>
+  <!-- Windows -->
+  <rect x="34" y="65" width="10" height="10" rx="1" fill="#87ceeb" stroke="#555" stroke-width="0.8"/>
+  <rect x="56" y="65" width="10" height="10" rx="1" fill="#87ceeb" stroke="#555" stroke-width="0.8"/>
+  <line x1="34" y1="70" x2="44" y2="70" stroke="#555" stroke-width="0.5"/>
+  <line x1="39" y1="65" x2="39" y2="75" stroke="#555" stroke-width="0.5"/>
+  <line x1="56" y1="70" x2="66" y2="70" stroke="#555" stroke-width="0.5"/>
+  <line x1="61" y1="65" x2="61" y2="75" stroke="#555" stroke-width="0.5"/>
+</svg>

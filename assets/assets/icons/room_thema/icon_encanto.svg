@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="bg_encanto" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="100%" stop-color="#e05c1a"/>
+    </radialGradient>
+  </defs>
+  <!-- Background -->
+  <circle cx="50" cy="50" r="48" fill="url(#bg_encanto)" stroke="#f0a500" stroke-width="2"/>
+  <!-- Candle / magic house door shape -->
+  <rect x="36" y="52" width="28" height="26" rx="3" fill="#7b2d00" opacity="0.85"/>
+  <path d="M36 52 Q50 36 64 52Z" fill="#a83a00" opacity="0.9"/>
+  <!-- Door arch -->
+  <path d="M43 78 L43 62 Q50 56 57 62 L57 78Z" fill="#f0c060" opacity="0.95"/>
+  <!-- Butterfly wings -->
+  <path d="M50 46 Q34 30 22 38 Q30 52 50 50Z" fill="#ff9d2f" opacity="0.85"/>
+  <path d="M50 46 Q66 30 78 38 Q70 52 50 50Z" fill="#ffbe00" opacity="0.85"/>
+  <path d="M50 52 Q34 60 26 52 Q34 44 50 50Z" fill="#e05000" opacity="0.7"/>
+  <path d="M50 52 Q66 60 74 52 Q66 44 50 50Z" fill="#e07800" opacity="0.7"/>
+  <!-- Center body -->
+  <ellipse cx="50" cy="49" rx="4" ry="6" fill="#7b2d00"/>
+  <!-- Antennae -->
+  <line x1="48" y1="44" x2="43" y2="36" stroke="#7b2d00" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="52" y1="44" x2="57" y2="36" stroke="#7b2d00" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="43" cy="35" r="2" fill="#ff9d2f"/>
+  <circle cx="57" cy="35" r="2" fill="#ff9d2f"/>
+</svg>

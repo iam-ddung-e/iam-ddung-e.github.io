@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="bg_aladdin" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#7b1fa2"/>
+      <stop offset="100%" stop-color="#1a0030"/>
+    </radialGradient>
+    <radialGradient id="lamp_gold" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff176"/>
+      <stop offset="60%" stop-color="#ffd600"/>
+      <stop offset="100%" stop-color="#f57f17"/>
+    </radialGradient>
+    <radialGradient id="magic_glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#b388ff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#6200ea" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#bg_aladdin)" stroke="#4a148c" stroke-width="2"/>
+  <!-- Stars -->
+  <circle cx="15" cy="18" r="1.5" fill="#fff9c4" opacity="0.9"/>
+  <circle cx="82" cy="12" r="1" fill="#fff9c4" opacity="0.8"/>
+  <circle cx="25" cy="35" r="1" fill="#fff9c4" opacity="0.6"/>
+  <circle cx="88" cy="30" r="1.5" fill="#fff9c4" opacity="0.7"/>
+  <circle cx="10" cy="60" r="1" fill="#fff9c4" opacity="0.5"/>
+  <circle cx="90" cy="55" r="1" fill="#fff9c4" opacity="0.6"/>
+  <!-- Magic smoke/genie swirl -->
+  <ellipse cx="50" cy="35" rx="22" ry="18" fill="url(#magic_glow)"/>
+  <path d="M35 50 Q28 35 38 25 Q50 15 62 25 Q72 35 65 50" fill="none" stroke="#ce93d8" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+  <path d="M38 52 Q30 38 40 28 Q50 18 60 28 Q70 38 62 52" fill="none" stroke="#b39ddb" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+  <!-- Magic lamp body -->
+  <path d="M28 65 Q26 55 35 52 Q45 49 50 52 Q55 49 65 52 Q74 55 72 65 Q65 72 50 73 Q35 72 28 65Z" fill="url(#lamp_gold)" stroke="#f9a825" stroke-width="1"/>
+  <!-- Lamp spout -->
+  <path d="M65 55 Q78 48 80 52 Q82 58 70 60" fill="url(#lamp_gold)" stroke="#f9a825" stroke-width="1"/>
+  <!-- Lamp handle -->
+  <path d="M28 60 Q18 60 18 68 Q18 76 28 70" fill="none" stroke="#ffd600" stroke-width="3" stroke-linecap="round"/>
+  <!-- Lamp lid -->
+  <path d="M38 52 Q50 44 62 52" fill="url(#lamp_gold)" stroke="#f9a825" stroke-width="1"/>
+  <path d="M44 44 Q50 38 56 44" fill="url(#lamp_gold)" stroke="#f9a825" stroke-width="1"/>
+  <circle cx="50" cy="37" r="3" fill="#ffd600" stroke="#f9a825" stroke-width="1"/>
+  <!-- Lamp shine -->
+  <ellipse cx="42" cy="60" rx="5" ry="3" fill="white" opacity="0.25" transform="rotate(-20 42 60)"/>
+  <!-- Magic star sparkles -->
+  <path d="M50 20 L51.5 24 L56 24 L52.5 27 L54 31 L50 28.5 L46 31 L47.5 27 L44 24 L48.5 24Z" fill="#fff176" opacity="0.9"/>
+  <path d="M78 42 L79 45 L82 45 L79.5 47 L80.5 50 L78 48.5 L75.5 50 L76.5 47 L74 45 L77 45Z" fill="#ce93d8" opacity="0.8" transform="scale(0.7) translate(40 12)"/>
+</svg>
