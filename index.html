@@ -76,11 +76,117 @@
       transition: opacity 0.25s ease;
     }
     #cache-badge.show { opacity: 1; }
+    #cache-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000000;
+      padding: 20px;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    #cache-modal.show { display: flex; }
+    .cm-card {
+      position: relative;
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    .cm-close {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      font-size: 22px;
+      line-height: 1;
+      color: #90A4AE;
+      cursor: pointer;
+      padding: 0;
+      border-radius: 16px;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0.08);
+    }
+    .cm-close:active { background: rgba(0, 0, 0, 0.08); }
+    .cm-emoji { font-size: 44px; line-height: 1; margin-bottom: 10px; }
+    .cm-title { font-size: 17px; font-weight: 700; color: #0D3D4F; margin-bottom: 10px; }
+    .cm-desc { font-size: 13px; color: #37474F; line-height: 1.55; margin-bottom: 18px; }
+    .cm-desc strong { color: #B33A00; }
+    .cm-bar-wrap {
+      background: #E0E0E0;
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .cm-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #0D3D4F 0%, #D4A017 100%);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .cm-count {
+      font-size: 12px;
+      color: #607D8B;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .cm-buttons { display: flex; gap: 10px; margin-top: 18px; }
+    .cm-btn {
+      flex: 1;
+      padding: 12px 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cm-btn-primary { background: #0D3D4F; color: #FFFFFF; }
+    .cm-btn-primary:active { background: #082832; }
+    .cm-btn-secondary { background: #ECEFF1; color: #37474F; }
+    .cm-btn-secondary:active { background: #D7DEE2; }
   </style>
 </head>
 <body>
   <div id="desktop-block">모바일 기기에서만 접속 가능합니다.</div>
   <div id="cache-badge"></div>
+  <div id="cache-modal" aria-hidden="true">
+    <div class="cm-card">
+      <div class="cm-stage cm-stage-prompt">
+        <div class="cm-emoji">📥</div>
+        <div class="cm-title">오프라인 사용</div>
+        <div class="cm-desc">
+          모든 콘텐츠를 저장하면 <strong>인터넷 없이도</strong> 사용 가능합니다.<br>
+          승선 전 WiFi에서 받아두시는 것을 권장합니다.
+        </div>
+        <div class="cm-buttons">
+          <button type="button" class="cm-btn cm-btn-secondary" id="cache-skip">다음에</button>
+          <button type="button" class="cm-btn cm-btn-primary" id="cache-start">지금 다운로드</button>
+        </div>
+      </div>
+      <div class="cm-stage cm-stage-progress" hidden>
+        <button type="button" class="cm-close" id="cache-modal-close" aria-label="닫기">×</button>
+        <div class="cm-emoji">📥</div>
+        <div class="cm-title">오프라인 사용 준비 중</div>
+        <div class="cm-desc">
+          모든 파일을 저장하고 있어요.<br>
+          오프라인에서도 보려면 <strong>완료될 때까지 창을 닫지 마세요</strong>.
+        </div>
+        <div class="cm-bar-wrap"><div class="cm-bar"></div></div>
+        <div class="cm-count">0 / 0</div>
+      </div>
+    </div>
+  </div>
 
   <script>
     (function() {
@@ -129,24 +235,89 @@
         if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
       }
 
+      var modal = document.getElementById('cache-modal');
+      var modalPromptStage = modal ? modal.querySelector('.cm-stage-prompt') : null;
+      var modalProgressStage = modal ? modal.querySelector('.cm-stage-progress') : null;
+      var modalBar = modal ? modal.querySelector('.cm-bar') : null;
+      var modalCount = modal ? modal.querySelector('.cm-count') : null;
+      var modalCloseBtn = modal ? modal.querySelector('#cache-modal-close') : null;
+      var startBtn = modal ? modal.querySelector('#cache-start') : null;
+      var skipBtn = modal ? modal.querySelector('#cache-skip') : null;
+      var modalDismissed = false;
+      var swOptedIn = false;
+
+      function switchToProgress() {
+        if (modalPromptStage) modalPromptStage.hidden = true;
+        if (modalProgressStage) modalProgressStage.hidden = false;
+      }
+      function showProgress(current, total) {
+        if (!modal || modalDismissed) return;
+        switchToProgress();
+        modal.classList.add('show');
+        var pct = total > 0 ? Math.round(current / total * 100) : 0;
+        if (modalBar) modalBar.style.width = pct + '%';
+        if (modalCount) modalCount.textContent = current + ' / ' + total;
+      }
+      function hideModal() {
+        if (!modal) return;
+        modal.classList.remove('show');
+      }
+      function registerSW() {
+        if (swOptedIn) return;
+        swOptedIn = true;
+        navigator.serviceWorker.register('flutter_service_worker.js?v=2149995982') /* Flutter's service worker is deprecated and will be removed in a future Flutter release. */.catch(function(err) {
+          console.warn('SW register failed:', err);
+        });
+      }
+
+      if (startBtn) {
+        startBtn.addEventListener('click', function() {
+          switchToProgress();
+          registerSW();
+        });
+      }
+      if (skipBtn) {
+        skipBtn.addEventListener('click', function() {
+          modalDismissed = true;
+          hideModal();
+        });
+      }
+      if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', function() {
+          modalDismissed = true;
+          hideModal();
+        });
+      }
+
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('message', function(e) {
           var d = e.data || {};
           if (d.type === 'cache-progress') {
             showBadge('오프라인 준비 중 ' + d.current + '/' + d.total);
+            if (swOptedIn) showProgress(d.current, d.total);
           } else if (d.type === 'cache-complete') {
             showBadge('✓ 오프라인 준비 완료', 3000);
+            hideModal();
           } else if (d.type === 'status') {
             if (d.complete) {
               hideBadge();
-            } else if (d.total > 0) {
+              hideModal();
+            } else if (d.total > 0 && swOptedIn) {
               showBadge('오프라인 준비 중 ' + d.current + '/' + d.total);
+              showProgress(d.current, d.total);
             }
           }
         });
-        navigator.serviceWorker.ready.then(function(reg) {
-          var sw = reg.active || reg.installing || reg.waiting;
-          if (sw && sw.postMessage) sw.postMessage({ type: 'status' });
+        // 기존 등록이 있으면 opt-in 이미 완료된 사용자 → 자동 업데이트, 프롬프트 생략.
+        // 없으면 opt-in 프롬프트 띄움.
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          if (reg) {
+            swOptedIn = true;
+            var sw = reg.active || reg.installing || reg.waiting;
+            if (sw && sw.postMessage) sw.postMessage({ type: 'status' });
+          } else if (modal) {
+            modal.classList.add('show');
+          }
         });
       }
 
