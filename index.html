@@ -185,6 +185,24 @@
         <div class="cm-bar-wrap"><div class="cm-bar"></div></div>
         <div class="cm-count">0 / 0</div>
       </div>
+      <div class="cm-stage cm-stage-install" hidden>
+        <div class="cm-emoji">📱</div>
+        <div class="cm-title">홈 화면에 추가</div>
+        <div class="cm-desc install-desc-default">
+          홈 화면 아이콘으로 바로 열고,<br>
+          주소창 없이 앱처럼 사용할 수 있어요.
+        </div>
+        <div class="cm-desc install-desc-ios" hidden>
+          iOS는 공유 → 홈 화면에 추가하세요.
+        </div>
+        <div class="cm-buttons install-buttons-default">
+          <button type="button" class="cm-btn cm-btn-secondary" id="install-skip">다음에</button>
+          <button type="button" class="cm-btn cm-btn-primary" id="install-add">홈에 추가</button>
+        </div>
+        <div class="cm-buttons install-buttons-ios" hidden>
+          <button type="button" class="cm-btn cm-btn-primary" id="install-ios-ok">확인</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -238,17 +256,38 @@
       var modal = document.getElementById('cache-modal');
       var modalPromptStage = modal ? modal.querySelector('.cm-stage-prompt') : null;
       var modalProgressStage = modal ? modal.querySelector('.cm-stage-progress') : null;
+      var modalInstallStage = modal ? modal.querySelector('.cm-stage-install') : null;
+      var installDescDefault = modal ? modal.querySelector('.install-desc-default') : null;
+      var installDescIos = modal ? modal.querySelector('.install-desc-ios') : null;
+      var installButtonsDefault = modal ? modal.querySelector('.install-buttons-default') : null;
+      var installButtonsIos = modal ? modal.querySelector('.install-buttons-ios') : null;
       var modalBar = modal ? modal.querySelector('.cm-bar') : null;
       var modalCount = modal ? modal.querySelector('.cm-count') : null;
       var modalCloseBtn = modal ? modal.querySelector('#cache-modal-close') : null;
       var startBtn = modal ? modal.querySelector('#cache-start') : null;
       var skipBtn = modal ? modal.querySelector('#cache-skip') : null;
+      var installAddBtn = modal ? modal.querySelector('#install-add') : null;
+      var installSkipBtn = modal ? modal.querySelector('#install-skip') : null;
+      var installIosOkBtn = modal ? modal.querySelector('#install-ios-ok') : null;
       var modalDismissed = false;
       var swOptedIn = false;
+      var deferredInstallPrompt = null;
+      var isIOS = /iPad|iPhone|iPod/i.test(ua) || (ua.indexOf('Mac') !== -1 && 'ontouchend' in document);
+      var isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+        || window.navigator.standalone === true;
 
-      function switchToProgress() {
+      function hideAllStages() {
         if (modalPromptStage) modalPromptStage.hidden = true;
+        if (modalProgressStage) modalProgressStage.hidden = true;
+        if (modalInstallStage) modalInstallStage.hidden = true;
+      }
+      function switchToProgress() {
+        hideAllStages();
         if (modalProgressStage) modalProgressStage.hidden = false;
+      }
+      function switchToInstall() {
+        hideAllStages();
+        if (modalInstallStage) modalInstallStage.hidden = false;
       }
       function showProgress(current, total) {
         if (!modal || modalDismissed) return;
@@ -265,10 +304,42 @@
       function registerSW() {
         if (swOptedIn) return;
         swOptedIn = true;
-        navigator.serviceWorker.register('flutter_service_worker.js?v=2149995982') /* Flutter's service worker is deprecated and will be removed in a future Flutter release. */.catch(function(err) {
+        navigator.serviceWorker.register('flutter_service_worker.js?v=552234922') /* Flutter's service worker is deprecated and will be removed in a future Flutter release. */.catch(function(err) {
           console.warn('SW register failed:', err);
         });
       }
+      function maybeShowInstallStage() {
+        // 캐시 완료 후 설치 안내 — PWA로 이미 실행 중이거나 유저가 모달 닫은 상태면 skip.
+        if (isStandalone || modalDismissed || !modal) {
+          hideModal();
+          return;
+        }
+        if (isIOS) {
+          // iOS: 수동 안내 (공유 → 홈 화면에 추가)
+          if (installDescDefault) installDescDefault.hidden = true;
+          if (installDescIos) installDescIos.hidden = false;
+          if (installButtonsDefault) installButtonsDefault.hidden = true;
+          if (installButtonsIos) installButtonsIos.hidden = false;
+          switchToInstall();
+          modal.classList.add('show');
+        } else if (deferredInstallPrompt) {
+          // Android/Chrome: 설치 프롬프트 사용 가능
+          switchToInstall();
+          modal.classList.add('show');
+        } else {
+          hideModal();
+        }
+      }
+
+      window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+      });
+      window.addEventListener('appinstalled', function() {
+        deferredInstallPrompt = null;
+        isStandalone = true;
+        hideModal();
+      });
 
       if (startBtn) {
         startBtn.addEventListener('click', function() {
@@ -288,6 +359,29 @@
           hideModal();
         });
       }
+      if (installAddBtn) {
+        installAddBtn.addEventListener('click', function() {
+          if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            deferredInstallPrompt.userChoice.finally(function() {
+              deferredInstallPrompt = null;
+              hideModal();
+            });
+          } else {
+            hideModal();
+          }
+        });
+      }
+      if (installSkipBtn) {
+        installSkipBtn.addEventListener('click', function() {
+          hideModal();
+        });
+      }
+      if (installIosOkBtn) {
+        installIosOkBtn.addEventListener('click', function() {
+          hideModal();
+        });
+      }
 
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('message', function(e) {
@@ -297,7 +391,8 @@
             if (swOptedIn) showProgress(d.current, d.total);
           } else if (d.type === 'cache-complete') {
             showBadge('✓ 오프라인 준비 완료', 3000);
-            hideModal();
+            // 캐시 완료 → 설치 프롬프트 가능하면 그 단계로, 아니면 닫기.
+            maybeShowInstallStage();
           } else if (d.type === 'status') {
             if (d.complete) {
               hideBadge();
