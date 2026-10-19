@@ -14,6 +14,8 @@ function withTimeout(p, ms) {
   ]);
 }
 
+const INSTALL_MARKER = '__install_complete__';
+
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
@@ -26,6 +28,8 @@ self.addEventListener('install', (event) => {
         try { await broadcast({ type: 'cache-progress', current: done, total }); } catch (e) {}
       }
     }
+    // Install 루프 완료 마커 — 일부 파일이 timeout으로 실패해도 설치는 끝난 것으로 간주.
+    try { await cache.put(INSTALL_MARKER, new Response('ok')); } catch (e) {}
     try { await broadcast({ type: 'cache-complete', total }); } catch (e) {}
     self.skipWaiting();
   })());
@@ -44,11 +48,14 @@ self.addEventListener('message', (event) => {
   if (d && d.type === 'status') {
     event.waitUntil((async () => {
       const cache = await caches.open(CACHE);
+      const marker = await cache.match(INSTALL_MARKER);
       const keys = await cache.keys();
       const done = keys.length;
       const total = PRECACHE.length;
+      // 설치 루프가 끝났으면 complete (일부 파일 timeout 실패해도 더 이상 install은 돌지 않음).
+      const complete = !!marker;
       if (event.source && event.source.postMessage) {
-        event.source.postMessage({ type: 'status', current: done, total, complete: done >= total });
+        event.source.postMessage({ type: 'status', current: done, total, complete });
       }
     })());
   }
